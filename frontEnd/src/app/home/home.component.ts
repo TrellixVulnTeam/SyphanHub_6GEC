@@ -11,6 +11,8 @@ import TaskModel from '../models/TaskModel';
 export class HomeComponent implements OnInit {
 
   public taskList: TaskModel[] = [];
+  public isFormOpen = false;
+  public imagesPath = environment.imagesPath;
 
   constructor(private backRequest: BackendRequestService<TaskModel>) { }
 
@@ -18,7 +20,7 @@ export class HomeComponent implements OnInit {
     this.onGetTasks();
   }
 
-  onSubmit(event: any) {
+  onSubmit(event: any): void {
     const task = new TaskModel();
     task.title = event.target.title.value;
     task.description = event.target.description.value;
@@ -28,17 +30,24 @@ export class HomeComponent implements OnInit {
     this.backRequest.postData(environment.urlBackEnd.task, task).subscribe((data: any) => {
       this.onGetTasks();
     });
+
+    this.onFormOpen();
   }
 
-  onGetTasks() {
+  onGetTasks(): void {
     this.backRequest.getData(environment.urlBackEnd.task).subscribe((data: any) => {
       this.taskList = data;
+      console.log(data);
     });
   }
 
-  onDelete(id?: number) {
+  onDelete(id?: number): void {
     this.backRequest.deleteData(environment.urlBackEnd.task, id).subscribe((data: any) => {
       this.onGetTasks();
     });
+  }
+
+  onFormOpen(): void {
+    this.isFormOpen = !this.isFormOpen;
   }
 }

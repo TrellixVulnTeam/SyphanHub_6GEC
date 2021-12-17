@@ -6,5 +6,6 @@ const urlBackEnd = {
 
 export const environment = {
   production: false,
-  urlBackEnd: urlBackEnd
+  urlBackEnd: urlBackEnd,
+  imagesPath: "../assets/images/",
 };

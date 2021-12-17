@@ -15,14 +15,14 @@ import java.util.List;
 import java.util.Optional;
 
 import com.syphan.hub.models.Task;
-import com.syphan.hub.resources.TaskResource;
+import com.syphan.hub.repositories.TaskRepository;
 
 @RestController
 @RequestMapping("/task")
 public class TaskService {
 
   @Autowired
-  TaskResource taskResource;
+  TaskRepository taskResource;
 
   @GetMapping()
   public List<Task> getTask() {
