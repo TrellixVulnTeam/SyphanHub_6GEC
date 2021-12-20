@@ -11,10 +11,10 @@ import TaskModel from '../models/TaskModel';
 export class HomeComponent implements OnInit {
 
   public taskList: TaskModel[] = [];
+  public editTask: TaskModel = new TaskModel();
   public imagesPath = environment.imagesPath;
   public isFormOpen = false;
   public isButtonDisabled = false;
-  public edittingTask: TaskModel = new TaskModel();
   public addButtonText = 'Adicionar novo';
 
   constructor(private backRequest: BackendRequestService<TaskModel>) { }
@@ -30,9 +30,17 @@ export class HomeComponent implements OnInit {
     task.status = event.target.status.value;
     task.dueDate = event.target.dueDate.value;
 
-    this.backRequest.postData(environment.urlBackEnd.task, task).subscribe((data: any) => {
-      this.onGetTasks();
-    });
+    if (this.editTask.id) {
+      task.id = this.editTask.id;
+      this.backRequest.putData(environment.urlBackEnd.task, task).subscribe((data: any) => {
+        this.editTask = new TaskModel();
+        this.onGetTasks();
+      });
+    } else {
+      this.backRequest.postData(environment.urlBackEnd.task, task).subscribe((data: any) => {
+        this.onGetTasks();
+      });
+    }
 
     this.onFormOpen();
   }
@@ -40,28 +48,38 @@ export class HomeComponent implements OnInit {
   onGetTasks(): void {
     this.backRequest.getData(environment.urlBackEnd.task).subscribe((data: any) => {
       this.taskList = data;
-      console.log(data);
     });
   }
 
   onDelete(id?: number): void {
-    this.backRequest.deleteData(environment.urlBackEnd.task, id).subscribe((data: any) => {
-      this.onGetTasks();
-    });
+    if (this.onDialogOpen()) {
+      this.backRequest.deleteData(environment.urlBackEnd.task, id).subscribe((data: any) => {
+        this.onGetTasks();
+      });
+    }
   }
 
-  onFormOpen(): void {
+  onFormOpen(isEditting?: boolean): void {
     this.isButtonDisabled = !this.isButtonDisabled;
     this.isFormOpen = !this.isFormOpen;
-    (this.isFormOpen) ? this.addButtonText = 'Visualizar tasks' : this.addButtonText = 'Adicionar novo';
+    this.addButtonText = (this.isFormOpen) ? 'Visualizar tasks' : 'Adicionar novo';
+
+    if (!isEditting) {
+      this.editTask = new TaskModel();
+    }
   }
 
   onEditTask(task: TaskModel): void {
-    console.log(task);
+    this.editTask = task;
+    this.onFormOpen(true);
   }
 
   onFormatDate(dueDate: String): String {
     const dataString = dueDate.split('-');
     return dataString[2] + '/' + dataString[1] + '/' + dataString[0];
+  }
+
+  onDialogOpen(): boolean {
+    return confirm('Deseja realmente excluir a(s) task?');
   }
 }

@@ -22,16 +22,16 @@ import com.syphan.hub.repositories.TaskRepository;
 public class TaskService {
 
   @Autowired
-  TaskRepository taskResource;
+  TaskRepository taskRepository;
 
   @GetMapping()
   public List<Task> getTask() {
-    return taskResource.findAll();
+    return taskRepository.findAll();
   }
 
   @GetMapping("/{id}")
   public Optional<Task> getTask(@PathVariable(value = "id") Long id) {
-    return taskResource.findById(id);
+    return taskRepository.findById(id);
   }
 
   @PostMapping()
@@ -39,21 +39,28 @@ public class TaskService {
     LocalDateTime now = LocalDateTime.now();
     task.setCreatedDate(now);
     task.setUpdatedDate(now);
-    return taskResource.save(task);
+    return taskRepository.save(task);
   }
 
   @DeleteMapping("/{id}")
   public void deleteTask(@PathVariable(value = "id") Long id) {
-    taskResource.deleteById(id);
+    taskRepository.deleteById(id);
   }
 
   @DeleteMapping()
   public void deleteAllTask() {
-    taskResource.deleteAll();
+    taskRepository.deleteAll();
   }
 
   @PutMapping()
   public Task updateTask(@RequestBody Task task) {
-    return taskResource.save(task);
+    Task taskToUpdate = taskRepository.findById(task.getId()).get();
+    taskToUpdate.setTitle(task.getTitle());
+    taskToUpdate.setDescription(task.getDescription());
+    taskToUpdate.setStatus(task.getStatus());
+    taskToUpdate.setDueDate(task.getDueDate());
+    taskToUpdate.setUpdatedDate(LocalDateTime.now());
+
+    return taskRepository.save(taskToUpdate);
   }
 }
