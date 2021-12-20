@@ -11,8 +11,11 @@ import TaskModel from '../models/TaskModel';
 export class HomeComponent implements OnInit {
 
   public taskList: TaskModel[] = [];
-  public isFormOpen = false;
   public imagesPath = environment.imagesPath;
+  public isFormOpen = false;
+  public isButtonDisabled = false;
+  public edittingTask: TaskModel = new TaskModel();
+  public addButtonText = 'Adicionar novo';
 
   constructor(private backRequest: BackendRequestService<TaskModel>) { }
 
@@ -48,6 +51,17 @@ export class HomeComponent implements OnInit {
   }
 
   onFormOpen(): void {
+    this.isButtonDisabled = !this.isButtonDisabled;
     this.isFormOpen = !this.isFormOpen;
+    (this.isFormOpen) ? this.addButtonText = 'Visualizar tasks' : this.addButtonText = 'Adicionar novo';
+  }
+
+  onEditTask(task: TaskModel): void {
+    console.log(task);
+  }
+
+  onFormatDate(dueDate: String): String {
+    const dataString = dueDate.split('-');
+    return dataString[2] + '/' + dataString[1] + '/' + dataString[0];
   }
 }

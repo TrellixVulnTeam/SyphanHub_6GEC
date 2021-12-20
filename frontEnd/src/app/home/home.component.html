@@ -2,13 +2,13 @@
   <div class="row">
     <h2>SyphanHub</h2>
     <p>Abaixo estão as tasks em aberto</p>
-    <button (click)="onDelete()">
+    <button (click)="onDelete()" [disabled]="isButtonDisabled">
       <mat-icon>delete</mat-icon>
       <em>Apagar todos</em>
     </button>
     <button (click)="onFormOpen()">
       <mat-icon>add</mat-icon>
-      <em>Adicionar novo</em>
+      <em>{{addButtonText}}</em>
     </button>
     <hr/>
 
@@ -16,7 +16,7 @@
       <input type="text" name="title" placeholder="Title">
       <input type="text" name="description" placeholder="Description">
       <input type="text" name="status" placeholder="Status">
-      <input type="text" name="dueDate" placeholder="Due date">
+      <input type="date" name="dueDate" placeholder="Due date">
       <button class="submitButton" type="submit">
         <mat-icon>save</mat-icon>
         <em>Salvar</em>
@@ -33,14 +33,23 @@
       </div>
     </div>
 
-    <div *ngIf="taskList">
-      <div *ngFor="let task of taskList" style="background-color: #e9e9e9; padding: 20px; border-radius: 6px; display: flex;">
+    <div *ngIf="taskList && !isFormOpen">
+      <div *ngFor="let task of taskList; let count = index;" style="background-color: #e9e9e9; padding: 20px; border-radius: 6px; display: flex;">
         <div style="display: flex; justify-content: center; align-items: center; margin-right: 20px; border-right: 1px solid black; padding-right: 25px;">
-          <p style="font-size: 20px;">{{task.id}}</p>
+          <p style="font-size: 20px;">{{count + 1}}</p>
         </div>
-        <div>
+        <div class="taskListDataSection">
           <p style="font-weight: 600;">{{task.title}}</p>
           <p>{{task.description}}</p>
+          <p>{{onFormatDate(task.dueDate)}}</p>
+        </div>
+        <div class="taskListButtonDeleteSection">
+          <button (click)="onEditTask(task)">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button (click)="onDelete(task.id)">
+            <mat-icon>delete</mat-icon>
+          </button>
         </div>
       </div>
     </div>

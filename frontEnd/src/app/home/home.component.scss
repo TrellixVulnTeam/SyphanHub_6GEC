@@ -54,6 +54,7 @@ button {
 
 hr {
   margin: 25px 0;
+  border: 1px solid #cccccc !important;
 }
 
 .imageSection {
@@ -82,4 +83,18 @@ em {
 
 form {
   margin-bottom: 30px;
+}
+
+.taskListDataSection {
+  width: 80%;
+}
+
+.taskListButtonDeleteSection {
+  text-align: end;
+  width: 20%;
+}
+
+button:disabled {
+  background-color: #cccc;
+  color: #6e6e6e;
 }
