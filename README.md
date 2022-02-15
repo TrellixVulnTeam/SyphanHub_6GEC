@@ -1,4 +1,4 @@
-# Welcome to SyphanHub #
+# Welcome to TasksHub #
 
 ## About the project ##
 SyphanHub is a simple project created to organize daily tasks
